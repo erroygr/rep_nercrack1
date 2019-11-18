@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
 import java.util.Comparator;
+import java.util.Optional;
 
 
 public class Person implements Comparable<Person>, IPerson {
@@ -35,6 +36,7 @@ public class Person implements Comparable<Person>, IPerson {
         this.division=division;
         this.salary=salary;
     }
+
 
 
     public Integer getId() {
@@ -141,20 +143,19 @@ public class Person implements Comparable<Person>, IPerson {
                 ",\n Отчество: "+getPatronymic()+",\n Пол: "+getGender()+
                 ",\n Дата рождения: "+birthDay.getDayOfMonth()+"."+birthDay.getMonthOfYear()+"."+ birthDay.getYear()+" г."+
                 ",\n Возраст: "+getAge(birthDay) +
-                "\n Отдел: "+getDivision().getName()+
+                "\n Должность: "+getDivision().getName()+
                 "\n Зарплата: "+getSalary()+"\n";
     }
 
 
     public String outPerson1(){
 
-        return  " Код: "+getId()+
-                ",\n Имя: "+getFirstName()+
-                ",\n Пол: "+getGender()+
-                ",\n Дата рождения: "+birthDay.getDayOfMonth()+"."+birthDay.getMonthOfYear()+"."+ birthDay.getYear()+" г."+
-                ",\n Возраст: "+getAge(birthDay) +
-                "\n Отдел: "+getDivision().getName()+
-                "\n Зарплата: "+getSalary()+"\n";
+        return  " | Код: " + getId() +
+                " | Имя: " + getFirstName() +
+                " | Возраст: " + getAge(getBirthdate()) +
+                " | Пол: " + getGender()+
+                " | Должность: "+ getDivision().getName()+
+                " | Зарплата: "+getSalary();
     }
 
 
@@ -208,4 +209,5 @@ public class Person implements Comparable<Person>, IPerson {
             return e1.getGender().compareTo(e2.getGender());
         }
     };
+
 }

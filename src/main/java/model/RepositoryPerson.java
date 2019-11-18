@@ -6,6 +6,7 @@ import model.interf.IRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import static model.Person.*;
@@ -16,9 +17,14 @@ public class RepositoryPerson implements IRepository {
     private Person [] personRepos;
 private int nElems=0;
 
-    public RepositoryPerson(int max){
-    personRepos=new Person[max];
+    public RepositoryPerson(){
+    personRepos=new Person[0];
 }
+
+    public RepositoryPerson(int Max){
+        personRepos=new Person[Max];
+    }
+
 
     public int size()
     {
@@ -102,7 +108,16 @@ private int nElems=0;
         return str;
     }
 
+    public  void printPerson(Person[] repositoryPerson) {
+        for (Person person : repositoryPerson) {
+            if ( !Optional.empty().equals(person))
+                System.out.println(outputPerson(person));
+        }
+    }
 
+    public  String  outputPerson(Person person) {
+        return " | Код: " + person.getId() + " | Имя: " + person.getFirstName() + " | Возраст: " + person.getAge(person.getBirthdate()) + " | Пол: " + person.getGender();
+    }
 
 
     @Override

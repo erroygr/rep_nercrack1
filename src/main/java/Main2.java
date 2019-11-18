@@ -22,7 +22,7 @@ public class Main2 {
        String delimeter1 = ".";
 
         Person person;
-        RepositoryPerson repositoryPerson=new RepositoryPerson(10);
+        RepositoryPerson repositoryPerson=new RepositoryPerson();
         try (BufferedReader br = new BufferedReader(new FileReader("persons.csv"))) {
             //чтение построчно
             String s;
@@ -43,7 +43,7 @@ public class Main2 {
                 person.setSalary(new BigDecimal(subStr[5]));
                 repositoryPerson.add(person);
 
-              //System.out.println(repositoryPerson.display1());
+              System.out.println(repositoryPerson.display1());
             }
         } catch (IOException ex) {
 
@@ -51,7 +51,7 @@ public class Main2 {
         }
 
 
-        Arrays.sort(repositoryPerson.get(), Person.AgeComparator);
-        System.out.println(repositoryPerson.display1());
+       // Arrays.sort(repositoryPerson.get(), Person.AgeComparator);
+        //System.out.println(repositoryPerson.display1());
     }
 }

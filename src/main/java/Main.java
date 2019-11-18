@@ -1,4 +1,5 @@
 import model.Division;
+import model.FindPerson;
 import model.Person;
 import model.RepositoryPerson;
 import org.joda.time.DateTime;
@@ -15,11 +16,11 @@ public class Main {
 
         Person person1=new Person(1,"Иванов","Иван","Иванович",MALE, new DateTime(1998,4,10,0,0), new Division(1,"Менеджер"),new BigDecimal("105000"));
         Person person2=new Person(2,"Петров","Петр","Петрович",MALE,new DateTime(2000,12,14,0,0), new Division(1,"Программист"),new BigDecimal("155000"));
-        Person person3=new Person(3,"Иванчюк","Оксана","Валерьевна",FEMALE,new DateTime(1999,6,24,0,0), new Division(1,"Экономист"),new BigDecimal("167000"));
+        Person person3=new Person(3,"Иванчюк","Елена","Валерьевна",FEMALE,new DateTime(1999,6,24,0,0), new Division(1,"Экономист"),new BigDecimal("167000"));
         Person person4=new Person(4,"Кисилева","Елена","Петровна",FEMALE,new DateTime(2001,11,11,0,0), new Division(1,"Продавец"),new BigDecimal("30460"));
 
 
-        RepositoryPerson repositoryPerson=new RepositoryPerson(2);
+        RepositoryPerson repositoryPerson=new RepositoryPerson();
 
         repositoryPerson.add(person1);
         repositoryPerson.add(person2);
@@ -73,7 +74,26 @@ public class Main {
         //сортировка по полу А-Я
         Arrays.sort(repositoryPerson.get(), Person.GenderPersonComparator);
         System.out.println(repositoryPerson.display());
+
+
+
+        FindPerson findPerson = new FindPerson(repositoryPerson.get());
+
+        System.out.println("\n Ищем человека с Кодом: 3");
+        System.out.println(repositoryPerson.outputPerson(findPerson.findOnId(3).get()));
+
+        System.out.println("\n Поиск по возрасту: 18 лет");
+        repositoryPerson.printPerson(findPerson.findOnAge(18).get());
+
+        System.out.println("\n Поиск по имени Елена");
+        repositoryPerson.printPerson(findPerson.findOnFirstName("Елена").get());
+
+
+
+
     }
+
+
 
 
 }
