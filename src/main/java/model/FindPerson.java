@@ -1,42 +1,55 @@
 package model;
 
-import java.util.Optional;
+import model.interf.Gender;
+
+import java.util.function.Predicate;
 
 public class FindPerson {
 
-    private Person[] reposPerson;
+    private RepositoryPerson reposPerson;
 
 
-    public FindPerson( Person[] reposPerson){
+    public FindPerson( RepositoryPerson reposPerson){
         this.reposPerson=reposPerson;
     }
 
-
-    public Optional<Person> findOnId(int id) {
-        for (Person person : reposPerson) {
-            if (person.getId() == id)
-                return Optional.of(person);
-        }
-        return Optional.empty();
+    public  Predicate<Person> isNAME(String name) {
+        return  person -> person.getFirstName() == name;
     }
 
-    public Optional<Person[]> findOnFirstName(String name) {
-        RepositoryPerson repositoryPerson = new RepositoryPerson();
-        for (Person person : reposPerson) {
-            if (person.getFirstName()==name)
-                repositoryPerson.add(person);
-        }
-        return Optional.of(repositoryPerson.get());
+    public  Predicate<Person> isLastName(String LastName) {
+        return  person -> person.getLastName() == LastName;
     }
 
-    public Optional<Person[]> findOnAge(int age) {
-        RepositoryPerson repositoryPerson = new RepositoryPerson();
-        for (Person person : reposPerson) {
-            if (person.getAge(person.getBirthdate()) == age)
-                repositoryPerson.add(person);
-        }
-        return Optional.of(repositoryPerson.get());
+    public  Predicate<Person> isPatronymic(String Patronymic) {
+        return  person -> person.getPatronymic() == Patronymic;
+    }
+
+    public  Predicate<Person> isId(Integer id) {
+        return  person -> person.getId() == id;
+    }
+
+    public  Predicate<Person> isDivisionName(String nameDivision) {
+        return  person -> person.getDivision().getName() == nameDivision;
+    }
+
+    public  Predicate<Person> isAge(int age) {
+        return  person -> person.getAge(person.getBirthdate()) == age;
+    }
+
+    public  Predicate<Person> isGender(Gender gender) {
+        return  person -> person.getGender() == gender;
     }
 
 
+
+    public RepositoryPerson searchBy(Predicate<Person> condition) {
+        RepositoryPerson  repository = new RepositoryPerson();
+        for (int i = 0; i < reposPerson.size(); i++) {
+            if (condition.test( reposPerson.getPers(i))) {
+                repository.add(reposPerson.getPers(i));
+            }
+        }
+        return repository;
+    }
 }

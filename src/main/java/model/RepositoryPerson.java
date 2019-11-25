@@ -59,6 +59,9 @@ private int nElems=0;
         return personRepos;
     }
 
+    public Person getPers(int ind) {
+        return personRepos[ind];
+    }
     public void add( Person person){
 
         if (size() >= personRepos.length) {
@@ -108,15 +111,21 @@ private int nElems=0;
         return str;
     }
 
-    public  void printPerson(Person[] repositoryPerson) {
-        for (Person person : repositoryPerson) {
-            if ( !Optional.empty().equals(person))
-                System.out.println(outputPerson(person));
+    public  void printPerson(RepositoryPerson repositoryPerson) {
+        for (int i=0; i< repositoryPerson.size(); i++) {
+                System.out.println(outputPerson(repositoryPerson.getPers(i)));
         }
     }
 
     public  String  outputPerson(Person person) {
-        return " | Код: " + person.getId() + " | Имя: " + person.getFirstName() + " | Возраст: " + person.getAge(person.getBirthdate()) + " | Пол: " + person.getGender();
+        return " | Код: " + person.getId() +
+                " | Имя: " + person.getFirstName() +
+                " | Возраст: " + person.getAge(person.getBirthdate()) +
+                " | Пол: " + person.getGender()+
+                " | Дата рождения: " + person.getBirthdate()+
+                " | Код должности: "+ person.getDivision().getId()+
+                " | Должность: "+ person.getDivision().getName()+
+                " | Зарплата: "+person.getSalary();
     }
 
 

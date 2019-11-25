@@ -2,13 +2,11 @@ package model;
 
 
 import model.interf.Gender;
-import model.interf.IDivision;
 import model.interf.IPerson;
-import org.joda.time.DateTime;
-
+import java.time.LocalDate;
 import java.math.BigDecimal;
 import java.util.Comparator;
-import java.util.Optional;
+
 
 
 public class Person implements Comparable<Person>, IPerson {
@@ -18,7 +16,7 @@ public class Person implements Comparable<Person>, IPerson {
     private String name;    //имя
     private String patronymic;  //отчество
     private Gender gender;   //пол
-    private DateTime birthDay;
+    private LocalDate  birthDay;
     private Division division; //отдел
     private BigDecimal salary; //ЗП
 
@@ -26,7 +24,7 @@ public class Person implements Comparable<Person>, IPerson {
 
     }
 
-    public Person( int id, String surname, String name, String patronymic, Gender gender,DateTime birthDay ,Division division, BigDecimal salary ) {
+    public Person( int id, String surname, String name, String patronymic, Gender gender,LocalDate   birthDay ,Division division, BigDecimal salary ) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -77,12 +75,12 @@ public class Person implements Comparable<Person>, IPerson {
 
 
     @Override
-    public DateTime getBirthdate() {
+    public LocalDate  getBirthdate() {
         return birthDay;
     }
 
     @Override
-    public void setBirthdate(DateTime birthdate) {
+    public void setBirthdate(LocalDate   birthdate) {
         this.birthDay = birthdate;
     }
 
@@ -98,20 +96,8 @@ public class Person implements Comparable<Person>, IPerson {
 
 
     @Override
-    public Integer getAge( DateTime birthDay) {
-        DateTime checkDay=new DateTime();
-        int years = checkDay.getYear() - birthDay.getYear();
-
-        int checkMonth = checkDay.getMonthOfYear();
-        int birthMonth = birthDay.getMonthOfYear();
-        if ( checkMonth < birthMonth ) {
-            years --;
-        } else  if (checkMonth == birthMonth
-                && checkDay.getDayOfMonth() < birthDay.getDayOfMonth()) {
-
-            years --;
-        }
-        return years;
+    public int getAge( LocalDate   birthDay) {
+        return LocalDate.now().getYear() - birthDay.getYear();
     }
 
 
@@ -141,7 +127,7 @@ public class Person implements Comparable<Person>, IPerson {
         return  " Код: "+getId()+
                 ",\n Фамилия: "+getLastName()+",\n Имя: "+getFirstName()+
                 ",\n Отчество: "+getPatronymic()+",\n Пол: "+getGender()+
-                ",\n Дата рождения: "+birthDay.getDayOfMonth()+"."+birthDay.getMonthOfYear()+"."+ birthDay.getYear()+" г."+
+                ",\n Дата рождения: "+birthDay.getDayOfMonth()+"."+birthDay.getMonth()+"."+ birthDay.getYear()+" г."+
                 ",\n Возраст: "+getAge(birthDay) +
                 "\n Должность: "+getDivision().getName()+
                 "\n Зарплата: "+getSalary()+"\n";
@@ -154,6 +140,8 @@ public class Person implements Comparable<Person>, IPerson {
                 " | Имя: " + getFirstName() +
                 " | Возраст: " + getAge(getBirthdate()) +
                 " | Пол: " + getGender()+
+                " | Дата рождения: " + getBirthdate()+
+                " | Код должности: "+ getDivision().getId()+
                 " | Должность: "+ getDivision().getName()+
                 " | Зарплата: "+getSalary();
     }

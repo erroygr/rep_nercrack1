@@ -1,9 +1,11 @@
 package model.interf;
 
 import model.Division;
-import org.joda.time.DateTime;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 
 public interface IPerson {
 
@@ -13,9 +15,9 @@ public interface IPerson {
      void setFirstName(String firstName);
      String getLastName();
      void setLastName(String lastName);
-     DateTime getBirthdate();
-     void setBirthdate(DateTime birthdate);
-     Integer getAge(DateTime birthDay);
+    LocalDate getBirthdate();
+     void setBirthdate(LocalDate  birthdate);
+     int getAge(LocalDate  birthDay);
      Gender getGender();
      void setGender(Gender gender);
      Division getDivision();

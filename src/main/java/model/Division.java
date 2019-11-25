@@ -33,4 +33,9 @@ this.id=id;
     public void setName(String name) {
 this.nameDivision=name;
     }
+
+
+    public static Integer randId(){
+        return (int) (0 + (Math.random() * 100));
+    }
 }
