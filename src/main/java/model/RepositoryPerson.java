@@ -1,111 +1,117 @@
 package model;
+import ru.vsu.lab.entities.IPerson;
+import ru.vsu.lab.repository.IRepository;
 
-import model.interf.IPerson;
-import model.interf.IRepository;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
-import static model.Person.*;
+import static model.Person.AgeComparator;
+import static model.Person.NamePersonComparator;
 
-public class RepositoryPerson implements IRepository {
 
+public  class RepositoryPerson<T> implements IRepository<T> {
 
-    private Person [] personRepos;
-private int nElems=0;
+    private final int INIT_SIZE = 8;
+
+    private final int CUT_RATE = 2;
+
+    private Object [] personRepos = new Object[INIT_SIZE];
+    private int nElems=0;
 
     public RepositoryPerson(){
-    personRepos=new Person[0];
-}
 
-    public RepositoryPerson(int Max){
-        personRepos=new Person[Max];
     }
-
-
+    
     public int size()
     {
         return nElems;
     }
 
 
-    public int find(int searchKey)   //найти
+    public void add(T person) {
+        if (nElems == personRepos.length - 1) {
+            resize(personRepos.length * 2);
+        }
+        personRepos[nElems++] = person;
+    }
+
+    public T delete(int value)  // удалить элемент
     {
-        int lowerBound = 0;
-        int upperBound = nElems-1;
-        int curIn;
+        T deleteItem = (T) personRepos[value];
+        for (int i = value; i < nElems; i++)
+            personRepos[i] = personRepos[i + 1];
+        personRepos[nElems] = null;
+        nElems--;
+        if (personRepos.length > INIT_SIZE && nElems < personRepos.length / CUT_RATE)
+            resize(personRepos.length / 2);
+        return deleteItem;
+    }
 
-        while(true)
-        {
-            curIn = (lowerBound + upperBound ) / 2;
-            if(personRepos[curIn].getId()==searchKey) {
-                return curIn;
-            } else if(lowerBound > upperBound)
-                return nElems;
-            else
-            {
-                if(personRepos[curIn].getId() < searchKey)
-                    lowerBound = curIn + 1;
-                else
-                    upperBound = curIn - 1;
-            }
+    @Override
+    public T set(int i, T o) {
+        if (i < 0 || i >= size()) throw new ArrayIndexOutOfBoundsException();
+        T old = (T) personRepos[i];
+        personRepos[i] = o;
+        return old;
+    }
+
+    @Override
+    public void add(int index, T person) {
+        if (nElems == personRepos.length - 1) {
+            resize(personRepos.length * 2);
         }
-    }
-
-    public Person[] get() {
-        return personRepos;
-    }
-
-    public Person getPers(int ind) {
-        return personRepos[ind];
-    }
-    public void add( Person person){
-
-        if (size() >= personRepos.length) {
-            int newSize =2+ personRepos.length;
-
-            Person[] newData = new Person[newSize];
-            System.arraycopy(personRepos, 0, newData,0, personRepos.length);
-            personRepos = newData;
+        for (int i = nElems; i > index; i--) {
+            personRepos[i] = personRepos[i - 1];
         }
-        personRepos[nElems] = person;
+        personRepos[index] = person;
         nElems++;
     }
 
+    @Override
+    public T get(int index) {
+        return (T) personRepos[index];
+    }
 
-    public void delete(int value)  // удалить элемент
-    {
-        int searchKey  = find(value);
-        for ( int j = 0; j < nElems; j++)
-        {
-        if (personRepos[j].getId() == searchKey)
-            break;
-                }
-        for (int k = searchKey; k < nElems - 1; k++) //сдвиг последующих элементов
-            personRepos[k] = personRepos[k + 1];
-        nElems--;
-
+    public Person getPerson(int ind){
+        return (Person) personRepos[ind];
     }
 
 
-    public String display()
-    {
-        String str="";
-        for(int j=0; j<nElems; j++) {
-            str +=  personRepos[j].outPerson() + "\n";
 
+    private void resize(int newLength) {
+        IPerson[] newArray = new IPerson[newLength];
+        System.arraycopy(personRepos, 0, newArray, 0, nElems);
+        personRepos = newArray;
+    }
+
+    @Override
+    public List<T> toList() {
+        return(List<T>) Arrays.asList(personRepos);
+    }
+
+    @Override
+    public void sortBy(Comparator<T> comparator) {
+       BubbleSort<T> bubbleSort = new BubbleSort<>();
+        bubbleSort.doBubbleSort((T[]) personRepos, comparator);
+    }
+
+
+    @Override
+    public IRepository searchBy(Predicate<T> condition) {
+        IRepository<T> repository = new RepositoryPerson<>();
+        for (int i = 0; i < size(); i++) {
+            if (condition.test((T) personRepos[i])) {
+                repository.add((T) personRepos[i]);
+            }
         }
-        return str;
+        return repository;
     }
 
-    public String display1()
+    public String display(RepositoryPerson repositoryPerson)
     {
         String str="";
         for(int j=0; j<nElems; j++) {
-            str +=  personRepos[j].outPerson1() + "\n";
+            str +=   repositoryPerson.getPerson(j).outPerson_()+ "\n";
 
         }
         return str;
@@ -113,66 +119,17 @@ private int nElems=0;
 
     public  void printPerson(RepositoryPerson repositoryPerson) {
         for (int i=0; i< repositoryPerson.size(); i++) {
-                System.out.println(outputPerson(repositoryPerson.getPers(i)));
+            System.out.println((repositoryPerson.getPerson(i)).outPerson(repositoryPerson.getPerson(i)));
         }
     }
 
-    public  String  outputPerson(Person person) {
-        return " | Код: " + person.getId() +
-                " | Имя: " + person.getFirstName() +
-                " | Возраст: " + person.getAge(person.getBirthdate()) +
-                " | Пол: " + person.getGender()+
-                " | Дата рождения: " + person.getBirthdate()+
-                " | Код должности: "+ person.getDivision().getId()+
-                " | Должность: "+ person.getDivision().getName()+
-                " | Зарплата: "+person.getSalary();
-    }
-
-
-    @Override
-    public IPerson set(int index, IPerson person) {
-        return null;
-    }
-
-    @Override
-    public void add(int index, IPerson person) {
-
-    }
-
-    @Override
-    public ArrayList<Person> toList() {
-        return (ArrayList<Person>) Arrays.asList(personRepos);
-    }
-
-
-    @Override
-    public void sortBy(Comparator<Person> comparator) {
-
-    }
-
-    @Override
-    public RepositoryPerson searchByName(Predicate<Person> condition) {
-        return (RepositoryPerson) NamePersonComparator;
-    }
-
-    @Override
-    public RepositoryPerson searchByFirstName(Predicate<Person> condition) {
-        return (RepositoryPerson) SurnamePersonComparator;
-    }
-
-    @Override
-    public RepositoryPerson searchByPatronymicName(Predicate<Person> condition) {
-        return (RepositoryPerson) PatronymicPersonComparator;
-    }
-
-    @Override
-    public RepositoryPerson searchByGender(Predicate<Person> condition) {
-        return (RepositoryPerson) GenderPersonComparator;
-    }
-
-    @Override
-    public RepositoryPerson searchByAge(Predicate<Person> condition) {
+  /*  public RepositoryPerson searchByAge() {
         return (RepositoryPerson) AgeComparator;
     }
+
+    public RepositoryPerson searchByName() {
+        return (RepositoryPerson) NamePersonComparator;
+    }*/
+
 
 }

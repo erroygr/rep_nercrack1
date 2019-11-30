@@ -1,8 +1,10 @@
 package model;
 
 
-import model.interf.Gender;
-import model.interf.IPerson;
+import ru.vsu.lab.entities.IDivision;
+import ru.vsu.lab.entities.IPerson;
+import ru.vsu.lab.entities.enums.Gender;
+
 import java.time.LocalDate;
 import java.math.BigDecimal;
 import java.util.Comparator;
@@ -17,14 +19,14 @@ public class Person implements Comparable<Person>, IPerson {
     private String patronymic;  //отчество
     private Gender gender;   //пол
     private LocalDate  birthDay;
-    private Division division; //отдел
+    private IDivision division; //отдел
     private BigDecimal salary; //ЗП
 
     public Person(){
 
     }
 
-    public Person( int id, String surname, String name, String patronymic, Gender gender,LocalDate   birthDay ,Division division, BigDecimal salary ) {
+    public Person( int id, String surname, String name, String patronymic, Gender gender,LocalDate   birthDay ,IDivision division, BigDecimal salary ) {
         this.id = id;
         this.surname = surname;
         this.name = name;
@@ -80,9 +82,10 @@ public class Person implements Comparable<Person>, IPerson {
     }
 
     @Override
-    public void setBirthdate(LocalDate   birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthDay = birthdate;
     }
+
 
     public Gender  getGender() {
         return gender;
@@ -96,18 +99,20 @@ public class Person implements Comparable<Person>, IPerson {
 
 
     @Override
-    public int getAge( LocalDate   birthDay) {
+    public Integer getAge() {
         return LocalDate.now().getYear() - birthDay.getYear();
     }
 
 
     @Override
-    public Division getDivision() {
+    public IDivision getDivision() {
         return division;
     }
 
+
+
     @Override
-    public void setDivision(Division division) {
+    public void setDivision(IDivision division) {
     this.division=division;
     }
 
@@ -122,23 +127,14 @@ public class Person implements Comparable<Person>, IPerson {
     }
 
 
-    public String outPerson(){
-
-        return  " Код: "+getId()+
-                ",\n Фамилия: "+getLastName()+",\n Имя: "+getFirstName()+
-                ",\n Отчество: "+getPatronymic()+",\n Пол: "+getGender()+
-                ",\n Дата рождения: "+birthDay.getDayOfMonth()+"."+birthDay.getMonth()+"."+ birthDay.getYear()+" г."+
-                ",\n Возраст: "+getAge(birthDay) +
-                "\n Должность: "+getDivision().getName()+
-                "\n Зарплата: "+getSalary()+"\n";
-    }
 
 
-    public String outPerson1(){
+
+    public String outPerson_(){
 
         return  " | Код: " + getId() +
                 " | Имя: " + getFirstName() +
-                " | Возраст: " + getAge(getBirthdate()) +
+                " | Возраст: " + getAge() +
                 " | Пол: " + getGender()+
                 " | Дата рождения: " + getBirthdate()+
                 " | Код должности: "+ getDivision().getId()+
@@ -156,9 +152,9 @@ public class Person implements Comparable<Person>, IPerson {
     public static Comparator<Person> AgeComparator = new Comparator<Person>() {
         @Override
         public int compare(Person e1, Person e2) {
-            if (e1.getAge(e1.birthDay) > e2.getAge(e2.birthDay))
+            if (e1.getAge() > e2.getAge())
                 return 1;
-            else if (e1.getAge(e1.birthDay) == e2.getAge(e2.birthDay))
+            else if (e1.getAge() == e2.getAge())
                 return 0;
             return -1;
         }
@@ -198,4 +194,16 @@ public class Person implements Comparable<Person>, IPerson {
         }
     };
 
+    public String outPerson(Person person){
+
+        return  " Код: "+person.getId()+
+                ",\n Фамилия: "+getLastName()+",\n Имя: "+person.getFirstName()+
+                ",\n Отчество: "+person.getPatronymic()+",\n Пол: "+person.getGender()+
+                ",\n Дата рождения: "+person.getBirthdate().getDayOfMonth()+"."+person.getBirthdate().getMonth()+"."+ person.getBirthdate().getYear()+" г."+
+                ",\n Возраст: "+person.getAge() +
+                "\n Должность: "+person.getDivision().getName()+
+                "\n Зарплата: "+person.getSalary()+"\n";
+    }
 }
+
+

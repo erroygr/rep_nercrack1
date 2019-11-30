@@ -1,6 +1,7 @@
 package model;
 
-import model.interf.IDivision;
+
+import ru.vsu.lab.entities.IDivision;
 
 public class Division implements IDivision {
 
@@ -10,6 +11,10 @@ public class Division implements IDivision {
     public Division(Integer id, String name){
         this.id=id;
         this.nameDivision=name;
+    }
+
+    public Division(){
+
     }
     public Division(String s){
         this.nameDivision=s;

@@ -1,6 +1,7 @@
 package model;
 
-import model.interf.Gender;
+
+import ru.vsu.lab.entities.enums.Gender;
 
 import java.util.function.Predicate;
 
@@ -34,7 +35,7 @@ public class FindPerson {
     }
 
     public  Predicate<Person> isAge(int age) {
-        return  person -> person.getAge(person.getBirthdate()) == age;
+        return  person -> person.getAge() == age;
     }
 
     public  Predicate<Person> isGender(Gender gender) {
@@ -46,8 +47,8 @@ public class FindPerson {
     public RepositoryPerson searchBy(Predicate<Person> condition) {
         RepositoryPerson  repository = new RepositoryPerson();
         for (int i = 0; i < reposPerson.size(); i++) {
-            if (condition.test( reposPerson.getPers(i))) {
-                repository.add(reposPerson.getPers(i));
+            if (condition.test((Person) reposPerson.get(i))) {
+                repository.add(reposPerson.get(i));
             }
         }
         return repository;
